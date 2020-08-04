@@ -14,8 +14,10 @@ if ( ! defined('WPINC')) {
 	exit;
 }
 
-if (file_exists(EV_PATH.'vendor/autoload.php')) {
-	require_once EV_PATH.'vendor/autoload.php';
+define('SHA_PATH', plugin_dir_path(__FILE__));
+
+if (file_exists(SHA_PATH.'vendor/autoload.php')) {
+	require_once SHA_PATH.'vendor/autoload.php';
 
 	new \The7055inc\Shared\Bootstrap();
 
