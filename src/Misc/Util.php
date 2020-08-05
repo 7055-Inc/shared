@@ -445,6 +445,7 @@ class Util
 			'post_content',
 			'post_parent',
 			'post_author',
+            'post_type',
 		);
 
 		$new_post = array();
@@ -458,7 +459,7 @@ class Util
 
 		// Insert post
 		$new_id = wp_insert_post($new_post);
-		if(!is_wp_error($new_id)) {
+		if(is_wp_error($new_id)) {
 			return false;
 		}
 
