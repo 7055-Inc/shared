@@ -161,7 +161,7 @@ class Util
 		return array(
 			'js'  => 'M d yy', // Should be the same as php
 			'php' => 'M d Y', // Should be the same as js
-			'db'  => 'Y-m-d',
+			'db'  => 'Y-m-d', // Default database format
 		);
 	}
 
@@ -174,7 +174,7 @@ class Util
 		return array(
 			'js'  => 'M d yy HH:mm:ss', // Should be the same as php
 			'php' => 'M d Y H:i:s', // Should be the same as js
-			'db'  => 'Y-m-d H:i:s',
+			'db'  => 'Y-m-d H:i:s', // Default database format
 		);
 	}
 
@@ -428,6 +428,14 @@ class Util
 
 		return $price;
 	}
+
+    /**
+     * Format status
+     * @param $status
+     */
+	public static function format_status($status) {
+	    return '<span class="mpl-status mpl-status-'.$status.'">'.ucfirst($status).'</span>';
+    }
 
 	/**
 	 * Duplicate post entry
