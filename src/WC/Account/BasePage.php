@@ -29,7 +29,7 @@ abstract class BasePage
      * Add ajax endpoints
      * @var array
      */
-    private $ajax_endpoints = array();
+    protected $ajax_endpoints = array();
 
 
     /**
