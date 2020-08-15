@@ -8,6 +8,11 @@
       "email": "dg@darkog.com"
     }
   ],
+  "require": {
+    "gdarko/wp-orm": "^1.0",
+    "gdarko/wp-validation": "^1.0",
+    "htmlburger/carbon-fields": "^3.1"
+  },
   "autoload": {
     "psr-4": {
       "The7055inc\\Shared\\": "src/"
