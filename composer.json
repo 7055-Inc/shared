@@ -1,12 +1,6 @@
 {
   "name": "7055inc/shared",
   "description": "Shared utilities for usage in Events and Marketplace plugins",
-  "type": "project",
-  "require": {
-    "gdarko/wp-orm": "^1.0",
-    "gdarko/wp-validation": "^1.0",
-    "htmlburger/carbon-fields": "^3.1"
-  },
   "license": "MIT",
   "authors": [
     {
@@ -14,8 +8,8 @@
       "email": "dg@darkog.com"
     }
   ],
-  "autoload" : {
-    "psr-4" : {
+  "autoload": {
+    "psr-4": {
       "The7055inc\\Shared\\": "src/"
     }
   }

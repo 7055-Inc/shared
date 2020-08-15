@@ -89,7 +89,7 @@ class Util
 	{
 		$_view = str_replace('/', DIRECTORY_SEPARATOR, $_view);
 
-		$_path = $root.'views'.DIRECTORY_SEPARATOR.$_view.'.php';
+		$_path = trailingslashit($root).'views'.DIRECTORY_SEPARATOR.$_view.'.php';
 
 		if (file_exists($_path)) {
 
