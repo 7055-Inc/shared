@@ -139,7 +139,8 @@ abstract class BasePage
      *
      * @return bool
      */
-    protected function is_subpage_query($subpage) {
+    protected function is_subpage_query($subpage)
+    {
         return isset($_GET['context']) && $_GET['context'] === $subpage;
     }
 
@@ -147,14 +148,41 @@ abstract class BasePage
      * Return the query id
      * @return mixed|null
      */
-    protected function get_query_id() {
+    protected function get_query_id()
+    {
         return isset($_GET['id']) ? $_GET['id'] : null;
     }
 
     /**
      * Render view
+     *
      * @param $view
      * @param  array  $data
      */
     abstract function render($view, $data = array());
+
+
+    /**
+     * Send response accepted by datatables.
+     *
+     * @param int $draw
+     * @param int $recordsTotal
+     * @param int $recordsFiltered
+     * @param array $data
+     * @param  string  $error
+     */
+    protected function response_json_datatables($draw, $recordsTotal, $recordsFiltered, $data, $error = '')
+    {
+        $response = array(
+            'draw'            => $draw,
+            'recordsTotal'    => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data'            => $data
+        );
+        if ( ! empty($error)) {
+            $response['error'] = $error;
+        }
+        echo json_encode($response);
+        die;
+    }
 }
