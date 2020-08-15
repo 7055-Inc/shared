@@ -11,6 +11,7 @@ use The7055inc\Shared\Misc\Request;
  */
 abstract class BasePage
 {
+    private $prefix = '7055_';
 
     /**
      * Tab slug
@@ -125,7 +126,7 @@ abstract class BasePage
     protected function define_ajax_endpoint($name, $callback, $is_private = true)
     {
         $this->ajax_endpoints[$name] = array(
-            'key'        => str_replace('-', '_', $this->slug . '_' .$name),
+            'key'        => $this->prefix . str_replace('-', '_', $this->slug . '_' .$name),
             'callback'   => $callback,
             'is_private' => $is_private,
         );

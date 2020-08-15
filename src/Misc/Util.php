@@ -100,7 +100,9 @@ class Util
 			include($_path);
 
 			return ob_get_clean();
-		}
+		} else {
+            error_log('View path not found: '. $_path);
+        }
 
 		return '';
 	}
