@@ -25,6 +25,11 @@ abstract class BasePage
      */
     protected $name = '';
 
+    /**
+     * Tab url
+     * @var string
+     */
+    protected $url = '';
 
     /**
      * Add ajax endpoints
@@ -184,5 +189,13 @@ abstract class BasePage
         }
         echo json_encode($response);
         die;
+    }
+
+    /**
+     * List of allowed actions
+     * @return array
+     */
+    public static function actions() {
+        return array();
     }
 }
