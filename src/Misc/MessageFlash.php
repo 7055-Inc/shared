@@ -16,16 +16,16 @@ class MessageFlash
      * @param $key
      * @param $message
      */
-    public static function flash($key, $message)
+    public static function make($key, $message)
     {
         set_transient(self::FLASH_PREFIX.$key, $message, DAY_IN_SECONDS);
     }
 
     /**
-     * Unflash message
+     * Remove message
      * @param $key
      */
-    public static function unflash($key)
+    public static function destroy($key)
     {
         delete_transient(self::FLASH_PREFIX.$key);
     }
@@ -33,13 +33,13 @@ class MessageFlash
     /**
      * Retrieve flashed message
      * @param $key
-     * @param  bool  $unflash
+     * @param  bool  $delete
      */
-    public static function retrieve_flashed_data($key, $unflash = true)
+    public static function get($key, $delete = true)
     {
         $data = get_transient(self::FLASH_PREFIX.$key);
-        if ( $unflash && ! empty($data)) {
-            self::unflash($key);
+        if ( $delete && ! empty($data)) {
+            self::destroy($key);
         }
     }
 }
