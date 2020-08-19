@@ -192,6 +192,45 @@ abstract class BasePage
     }
 
     /**
+     * Standardized way to respond
+     *
+     * @param $success
+     * @param $data
+     */
+    protected function response($success, $data = array()) {
+        if($success) {
+            wp_send_json_success($data);
+        } else {
+            wp_send_json_error($data);
+        }
+        die;
+    }
+
+    /**
+     * Check the ajax referrer
+     */
+    protected function check_ajax_referrer() {
+        return check_ajax_referer('mpl-account', '_nonce', false);
+    }
+
+    /**
+     * Returns the root url
+     */
+    protected function set_root_url() {
+
+        if(!is_null($this->url)) {
+            return $this->url;
+        }
+
+        if(function_exists('\wc_get_account_endpoint_url')) {
+            $this->url = \wc_get_account_endpoint_url($this->slug);
+        } else {
+            $this->url = null;
+        }
+        return $this->url;
+    }
+
+    /**
      * List of allowed actions
      * @return array
      */

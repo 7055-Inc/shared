@@ -92,4 +92,15 @@ class Request
     public function get_client_ip() {
         return Util::get_client_ip();
     }
+
+    /**
+     * Returns the current user ID
+     * @return mixed
+     */
+    public function get_current_user_id() {
+        if(!function_exists('\get_current_user_id')) {
+            return null;
+        }
+        return \get_current_user_id();
+    }
 }
