@@ -7,18 +7,22 @@ namespace The7055inc\Shared\Misc;
  * Class MessageFlash
  * @package The7055inc\Shared\Misc
  */
-class MessageFlash
+class SessionFlash
 {
     const FLASH_PREFIX = 'mpl_';
 
     /**
      * Flash message
-     * @param $key
-     * @param $message
+     *
+     * @param  string  $key
+     * @param  string  $status
+     * @param  string|array  $message
+     * @param  array  $errors
      */
-    public static function make($key, $message)
+    public static function make($key, $status, $message, $errors = array())
     {
-        set_transient(self::FLASH_PREFIX.$key, $message, DAY_IN_SECONDS);
+        $_message = new FlashMessage($key, $status, $message, $errors);
+        set_transient(self::FLASH_PREFIX.$key, $_message, DAY_IN_SECONDS);
     }
 
     /**
@@ -32,14 +36,19 @@ class MessageFlash
 
     /**
      * Retrieve flashed message
+     *
      * @param $key
-     * @param  bool  $delete
+     * @param  bool|FlashMessage  $delete
+     *
+     * @return mixed
      */
     public static function get($key, $delete = true)
     {
         $data = get_transient(self::FLASH_PREFIX.$key);
-        if ( $delete && ! empty($data)) {
+        if ($delete && false !== $data) {
             self::destroy($key);
         }
+
+        return $data;
     }
 }
