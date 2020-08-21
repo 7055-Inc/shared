@@ -29,7 +29,7 @@ abstract class BasePage
      * Tab url
      * @var string
      */
-    protected $url = '';
+    protected $url = null;
 
     /**
      * Add ajax endpoints
