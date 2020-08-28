@@ -16,7 +16,7 @@ class UploadField
      * @param $current_value
      * @param $placeholder
      */
-    public function the_field( $key, $current_value, $placeholder = '' ) {
+    public static function the_field( $key, $current_value, $placeholder = '' ) {
 
         $media_id = $current_value;
         if ( ! empty( $media_id ) && is_numeric( $media_id ) ) {
