@@ -227,6 +227,7 @@ abstract class BasePage
         } else {
             $this->url = null;
         }
+
         return $this->url;
     }
 
@@ -234,7 +235,27 @@ abstract class BasePage
      * List of allowed actions
      * @return array
      */
-    public static function actions() {
+    public static function actions()
+    {
         return array();
+    }
+
+
+    /**
+     * Can write to object?
+     *
+     * @param $object_author_id
+     *
+     * @return bool
+     */
+    protected function can_write($object_author_id)
+    {
+        $current_user_id = $this->request->get_current_user_id();
+
+        if(!$current_user_id) {
+            return false;
+        }
+
+        return intval($object_author_id) == intval($current_user_id);
     }
 }
