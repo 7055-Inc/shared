@@ -89,9 +89,9 @@ class Util
      */
     public static function get_view($root, $_view, $_data = array())
     {
-        $_view = str_replace('/', DIRECTORY_SEPARATOR, $_view);
+        $_view = \str_replace('/', DIRECTORY_SEPARATOR, $_view);
 
-        $_path = trailingslashit($root).'views'.DIRECTORY_SEPARATOR.$_view.'.php';
+        $_path = \trailingslashit($root).'views'.DIRECTORY_SEPARATOR.$_view.'.php';
 
         if (file_exists($_path)) {
 
@@ -122,9 +122,9 @@ class Util
     {
         $final = '';
         if ($author) {
-            $user = get_user_by('id', $author);
+            $user = \get_user_by('id', $author);
             if ($user) {
-                $final = ucfirst($user->display_name);
+                $final = \ucfirst($user->display_name);
             } else {
                 $final = __('Unknown');
             }
@@ -309,13 +309,13 @@ class Util
     public static function link_post($id, $ext = true)
     {
 
-        $_post = get_post($id);
+        $_post = \get_post($id);
 
         if (empty($_post)) {
             $link = __('Unknown');
         } else {
             $target = $ext ? 'target="_blank"' : '';
-            $link   = '<a '.$target.' href="'.get_permalink($id).'">'.$_post->post_title.'</a>';
+            $link   = '<a '.$target.' href="'.\get_permalink($id).'">'.$_post->post_title.'</a>';
         }
 
         return $link;
@@ -330,8 +330,8 @@ class Util
     public static function media_upload_field( $key, $current_value, $placeholder = '' ) {
 
         $media_id = $current_value;
-        if ( ! empty( $media_id ) && is_numeric( $media_id ) ) {
-            $current_src = wp_get_attachment_image_src( $media_id, 'thumbnail' );
+        if ( ! empty( $media_id ) && \is_numeric( $media_id ) ) {
+            $current_src = \wp_get_attachment_image_src( $media_id, 'thumbnail' );
             $current_src = $current_src[0];
         } else {
             $current_src = $placeholder;
@@ -364,14 +364,14 @@ class Util
         if (empty($itemID)) {
             $reported_item = __('Unknown');
         } else {
-            $reported_item = get_the_title($itemID);
+            $reported_item = \get_the_title($itemID);
         }
 
         return $reported_item;
     }
 
     public static function format_edit_link($itemID, $new_tab = false) {
-        $title  = get_the_title($itemID);
+        $title  = \get_the_title($itemID);
         $link   = self::link_edit_post($itemID);
         $target = $new_tab ? 'target="_blank"' : '';
 
@@ -386,7 +386,7 @@ class Util
      * @return string|null
      */
     public static function link_edit_post($id) {
-        return get_edit_post_link($id);
+        return \get_edit_post_link($id);
     }
 
     /**
@@ -399,13 +399,13 @@ class Util
     public static function link_user($id, $ext = true)
     {
 
-        $user = get_user_by('id', $id);
+        $user = \get_user_by('id', $id);
 
         if (empty($user)) {
             $link = __('Unknown');
         } else {
             $target = $ext ? 'target="_blank"' : '';
-            $url    = admin_url('user-edit.php?user_id='.$id);
+            $url    = \admin_url('user-edit.php?user_id='.$id);
             $link   = '<a '.$target.' href="'.$url.'">'.$user->display_name.'</a>';
         }
 
@@ -415,13 +415,13 @@ class Util
     public static function link_vendor($id, $ext = true)
     {
 
-        $name = get_user_meta($id, 'company_name', true);
+        $name = \get_user_meta($id, 'company_name', true);
         if (empty($name)) {
-            $_user = get_user_by('id', $id);
+            $_user = \get_user_by('id', $id);
             $name  = $_user->display_name;
         }
 
-        $url    = admin_url('admin.php?page='.MPL_ADMIN_PAGE.'&action=edit&id='.$id);
+        $url    = \admin_url('admin.php?page='.MPL_ADMIN_PAGE.'&action=edit&id='.$id);
         $target = $ext ? 'target="_blank"' : '';
 
         return '<a '.$target.' href="'.$url.'">'.$name.'</a>';
@@ -442,7 +442,7 @@ class Util
         }
 
         if (function_exists('wc_price')) {
-            $price = wc_price($price);
+            $price = \wc_price($price);
         } else {
             $formatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY);
             $price     = $formatter->formatCurrency($price, 'USD');
@@ -489,7 +489,7 @@ class Util
 
         // Insert post
         $new_id = wp_insert_post($new_post);
-        if(is_wp_error($new_id)) {
+        if(\is_wp_error($new_id)) {
             return false;
         }
 
@@ -497,7 +497,7 @@ class Util
         $meta = get_post_meta($source->ID);
         foreach ($meta as $key => $v_arr) {
             $value = is_array($v_arr) ? $v_arr[0] : $v_arr;
-            update_post_meta($new_id, $key, $value);
+            \update_post_meta($new_id, $key, $value);
         }
 
         return $new_id;
@@ -514,7 +514,7 @@ class Util
     public static function get_user_roles($user)
     {
         if ( ! $user instanceof \WP_User) {
-            $user = get_user_by('id', $user);
+            $user = \get_user_by('id', $user);
         }
 
         return empty($user) ? array() : $user->roles;
@@ -531,7 +531,7 @@ class Util
     public static function is_user_in_role($user, $role)
     {
         if ( ! $user instanceof \WP_User) {
-            $user = get_user_by('id', $user);
+            $user = \get_user_by('id', $user);
         }
 
         return in_array($role, self::get_user_roles($user));
