@@ -514,7 +514,7 @@ class Util
     public static function get_user_roles($user)
     {
         if ( ! $user instanceof \WP_User) {
-            $user = \get_user_by('id', $user);
+            $user = self::get_user_by_id($user);
         }
 
         return empty($user) ? array() : $user->roles;
@@ -531,7 +531,7 @@ class Util
     public static function is_user_in_role($user, $role)
     {
         if ( ! $user instanceof \WP_User) {
-            $user = \get_user_by('id', $user);
+            $user = self::get_user_by_id($user);
         }
 
         return in_array($role, self::get_user_roles($user));
@@ -558,4 +558,18 @@ class Util
         return self::is_user_in_role(get_current_user_id(), $role);
     }
 
+
+    /**
+     * Return the current user
+     *
+     * @param $id
+     *
+     * @return false|\WP_User
+     */
+    public static function get_user_by_id($id) {
+        if(!function_exists('\get_user_by')) {
+            include_once(ABSPATH . 'wp-includes/pluggable.php');
+        }
+        return \get_user_by('id', $id);
+    }
 }
