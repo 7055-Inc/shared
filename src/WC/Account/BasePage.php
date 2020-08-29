@@ -5,6 +5,7 @@ namespace The7055inc\Shared\WC\Account;
 
 use The7055inc\Shared\Misc\Request;
 use The7055inc\Shared\Misc\SessionFlash;
+use The7055inc\Shared\Misc\Util;
 
 /**
  * Class BasePage
@@ -47,6 +48,14 @@ abstract class BasePage
      * @var
      */
     protected $request;
+
+
+    /**
+     * Restrict to certain roles only. Leave blank for all roles.
+     *
+     * @var array
+     */
+    protected $roles = array();
 
 
     public function __construct() {
@@ -96,10 +105,27 @@ abstract class BasePage
      */
     public function register()
     {
+        // Validate slug
         if (empty($this->slug)) {
             error_log(__('Unable to register my account tab. Empty slug.'));
         }
 
+        // Enforce role restriction (if any)
+        $allow = false;
+        if(!empty($this->roles)) {
+            foreach($this->roles as $role) {
+                if(Util::is_current_user_in_role($role)) {
+                    $allow = true;
+                }
+            }
+        } else {
+            $allow = true;
+        }
+        if(!$allow) {
+            return;
+        }
+
+        // Register the required actions and ajax endpoints.
         add_action('woocommerce_account_menu_items', array($this, 'account_menu_items'));
         add_action('init', array($this, 'add_rewrite_endpoint'));
         add_filter('query_vars', array($this, 'query_vars'));
