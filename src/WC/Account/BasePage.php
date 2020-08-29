@@ -4,6 +4,7 @@
 namespace The7055inc\Shared\WC\Account;
 
 use The7055inc\Shared\Misc\Request;
+use The7055inc\Shared\Misc\SessionFlash;
 
 /**
  * Class BasePage
@@ -11,6 +12,9 @@ use The7055inc\Shared\Misc\Request;
  */
 abstract class BasePage
 {
+
+    const FLASH_PARAM = '_lp';
+
     private $prefix = '7055_';
 
     /**
@@ -197,8 +201,9 @@ abstract class BasePage
      * @param $success
      * @param $data
      */
-    protected function response($success, $data = array()) {
-        if($success) {
+    protected function response($success, $data = array())
+    {
+        if ($success) {
             wp_send_json_success($data);
         } else {
             wp_send_json_error($data);
@@ -207,22 +212,42 @@ abstract class BasePage
     }
 
     /**
+     * Standardized ajax way to flash messages with redirect
+     *
+     * @param $success
+     * @param $url
+     * @param $message
+     * @param  array  $errors
+     */
+    protected function response_redirect_flashed($success, $url, $message, $errors = array())
+    {
+        $flash_key = uniqid('_');
+        SessionFlash::make($flash_key, $success, $message, $errors);
+        $url = add_query_arg(self::FLASH_PARAM, $flash_key, $url);
+        $this->response($success, array(
+            'redirect' => $url,
+        ));
+    }
+
+    /**
      * Check the ajax referrer
      */
-    protected function check_ajax_referrer() {
+    protected function check_ajax_referrer()
+    {
         return check_ajax_referer('mpl-account', '_nonce', false);
     }
 
     /**
      * Returns the root url
      */
-    protected function set_root_url() {
+    protected function set_root_url()
+    {
 
-        if(!is_null($this->url)) {
+        if ( ! is_null($this->url)) {
             return $this->url;
         }
 
-        if(function_exists('\wc_get_account_endpoint_url')) {
+        if (function_exists('\wc_get_account_endpoint_url')) {
             $this->url = \wc_get_account_endpoint_url($this->slug);
         } else {
             $this->url = null;

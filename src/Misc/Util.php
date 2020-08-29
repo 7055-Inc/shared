@@ -495,12 +495,67 @@ class Util
 
         // Copy Metadata
         $meta = get_post_meta($source->ID);
-        foreach($meta as $key => $v_arr) {
+        foreach ($meta as $key => $v_arr) {
             $value = is_array($v_arr) ? $v_arr[0] : $v_arr;
             update_post_meta($new_id, $key, $value);
         }
 
         return $new_id;
+    }
+
+
+    /**
+     * Return the roles of user
+     *
+     * @param  int|\WP_User  $user
+     *
+     * @return array|string[]
+     */
+    public static function get_user_roles($user)
+    {
+        if ( ! $user instanceof \WP_User) {
+            $user = get_user_by('id', $user);
+        }
+
+        return empty($user) ? array() : $user->roles;
+    }
+
+    /**
+     * Check current user role
+     *
+     * @param $user
+     * @param $role
+     *
+     * @return bool
+     */
+    public static function is_user_in_role($user, $role)
+    {
+        if ( ! $user instanceof \WP_User) {
+            $user = get_user_by('id', $user);
+        }
+
+        return in_array($role, self::get_user_roles($user));
+    }
+
+    /**
+     * Return the roles of the current user
+     * @return array|string[]
+     */
+    public static function get_current_user_roles()
+    {
+        return self::get_user_roles(get_current_user_id());
+    }
+
+    /**
+     * Check current user role
+     *
+     * @param $role
+     *
+     * @return bool
+     */
+    public static function is_current_user_in_role($role)
+    {
+        return self::is_user_in_role(get_current_user_id(), $role);
     }
 
 }
