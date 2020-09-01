@@ -71,6 +71,11 @@ abstract class BasePage
      */
     public function account_menu_items($items)
     {
+
+        if ( ! $this->can_access()) {
+            return $items;
+        }
+
         $items[$this->slug] = $this->name;
 
         return $items;
@@ -110,26 +115,11 @@ abstract class BasePage
             error_log(__('Unable to register my account tab. Empty slug.'));
         }
 
-        // Enforce role restriction (if any)
-        $allow = false;
-        if(!empty($this->roles)) {
-            foreach($this->roles as $role) {
-                if(Util::is_current_user_in_role($role)) {
-                    $allow = true;
-                }
-            }
-        } else {
-            $allow = true;
-        }
-        if(!$allow) {
-            return;
-        }
-
         // Register the required actions and ajax endpoints.
         add_action('woocommerce_account_menu_items', array($this, 'account_menu_items'));
         add_action('init', array($this, 'add_rewrite_endpoint'));
         add_filter('query_vars', array($this, 'query_vars'));
-        add_action('woocommerce_account_'.$this->slug.'_endpoint', array($this, 'content'));
+        add_action('woocommerce_account_'.$this->slug.'_endpoint', array($this, '_content'));
 
         if (count($this->ajax_endpoints)) {
             foreach ($this->ajax_endpoints as $ajax_endpoint) {
@@ -137,11 +127,26 @@ abstract class BasePage
                     continue;
                 }
                 add_action('wp_ajax_'.$ajax_endpoint['key'], array($this, $ajax_endpoint['callback']));
-                if( !$ajax_endpoint['is_private']) {
+                if ( ! $ajax_endpoint['is_private']) {
                     add_action('wp_ajax_nopriv_'.$ajax_endpoint['key'], array($this, $ajax_endpoint['callback']));
                 }
             }
         }
+    }
+
+    /**
+     * The page content
+     */
+    public function _content()
+    {
+
+        if ( ! $this->can_access()) {
+            echo '<p>'.__('Permission denied.').'</p>';
+
+            return;
+        }
+
+        $this->content();
     }
 
     /**
@@ -303,10 +308,33 @@ abstract class BasePage
     {
         $current_user_id = $this->request->get_current_user_id();
 
-        if(!$current_user_id) {
+        if ( ! $current_user_id) {
             return false;
         }
 
         return intval($object_author_id) == intval($current_user_id);
+    }
+
+
+    /**
+     * Check if the current user can access this page
+     * @return bool
+     */
+    protected function can_access()
+    {
+
+        $allow = false;
+        if ( ! empty($this->roles)) {
+            foreach ($this->roles as $role) {
+                if (Util::is_current_user_in_role($role)) {
+                    $allow = true;
+                }
+            }
+        } else {
+            $allow = true;
+        }
+
+        return $allow;
+
     }
 }
