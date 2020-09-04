@@ -1,7 +1,7 @@
 <?php
 
 
-namespace The7055inc\Marketplace\Misc;
+namespace The7055inc\Shared\Misc;
 
 
 class Data
