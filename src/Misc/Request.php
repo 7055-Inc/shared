@@ -103,4 +103,34 @@ class Request
         }
         return \get_current_user_id();
     }
+
+	/**
+	 * Parse input array
+	 *
+	 * @param $name
+	 * @param array $keys
+	 *
+	 * @return array
+	 */
+	public function parse_input_array($name, $keys = array())
+	{
+		$new_structure = array();
+		$items         = $this->get($name, array());
+		if (count($items) > 0) {
+			$items = array_chunk($items, count($keys));
+			foreach ($items as $item) {
+				$object = [];
+				foreach ($item as $property) {
+					foreach ($keys as $key) {
+						if (isset($property[$key])) {
+							$object[$key] = $property[$key];
+						}
+					}
+				}
+				array_push($new_structure, $object);
+			}
+		}
+
+		return $new_structure;
+	}
 }

@@ -42,13 +42,11 @@ abstract class BasePage
      */
     protected $ajax_endpoints = array();
 
-
     /**
      * The current request
-     * @var
+     * @var Request
      */
     protected $request;
-
 
     /**
      * Restrict to certain roles only. Leave blank for all roles.
