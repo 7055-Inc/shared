@@ -133,4 +133,28 @@ class Request
 
 		return $new_structure;
 	}
+
+	/**
+	 * Returns array of headers
+	 * @return array
+	 */
+	public function get_headers() {
+		return self::_get_headers();
+	}
+
+	/**
+	 * Returns array of headers
+	 * @return array
+	 */
+	public static function _get_headers() {
+		$headers = array();
+		foreach($_SERVER as $key => $value) {
+			if (substr($key, 0, 5) <> 'HTTP_') {
+				continue;
+			}
+			$header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+			$headers[$header] = $value;
+		}
+		return $headers;
+	}
 }
