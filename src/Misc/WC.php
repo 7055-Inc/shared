@@ -25,20 +25,80 @@ class WC
         return '#'.$ID.' - '.get_the_title($ID);
     }
 
+	/**
+	 * Set regular price
+	 *
+	 * @param $ID
+	 * @param $price
+	 *
+	 * @return bool
+	 */
+	public static function set_regular_price($ID, $price)
+	{
+		$product = wc_get_product($ID);
+		if($product) {
+			$product->set_regular_price($price);
+			$product->save();
+			wc_delete_product_transients($ID);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Set variation regular price
+	 *
+	 * @param $ID
+	 * @param $price
+	 *
+	 * @return bool
+	 */
     public static function set_variation_regular_price($ID, $price)
     {
-        update_post_meta($ID, '_regular_price', $price);
-        update_post_meta($ID, '_price', $price);
-        wc_delete_product_transients($ID);
+		return self::set_regular_price($ID, $price);
     }
 
-    public static function set_regular_price($ID, $price)
-    {
-        update_post_meta($ID, '_regular_price', $price);
-        update_post_meta($ID, '_price', $price);
-        wc_delete_product_transients($ID);
-    }
+	/**
+	 * Set sale price
+	 *
+	 * @param $ID
+	 * @param $price
+	 *
+	 * @return bool
+	 */
+	public static function set_sale_price($ID, $price)
+	{
+		$product = wc_get_product($ID);
+		if($product) {
+			$product->set_sale_price($price);
+			$product->save();
+			wc_delete_product_transients($ID);
+			return true;
+		}
+		return false;
+	}
 
+	/**
+	 * Set variation sale price
+	 *
+	 * @param $ID
+	 * @param $price
+	 *
+	 * @return bool
+	 */
+	public static function set_variation_sale_price($ID, $price)
+	{
+		return self::set_sale_price($ID, $price);
+	}
+
+
+	/**
+	 * Return the variation name
+	 *
+	 * @param $variationID
+	 *
+	 * @return string
+	 */
     public static function get_variation_name($variationID)
     {
         $variation     = new \WC_Product_Variation($variationID);
@@ -46,7 +106,14 @@ class WC
 
         return $variationName;
     }
-    
+
+	/**
+	 * Return the variation short name
+	 *
+	 * @param $variationID
+	 *
+	 * @return string
+	 */
     public static function get_variation_name_short($variationID)
     {
         $variation = new \WC_Product_Variation($variationID);
