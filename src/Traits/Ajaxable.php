@@ -9,6 +9,12 @@ namespace The7055inc\Shared\Traits;
 trait Ajaxable {
 
 	/**
+	 * The slug identifier
+	 * @var string
+	 */
+	protected $slug;
+
+	/**
 	 * The ajax endpoint prefix
 	 * @var string
 	 */
@@ -58,7 +64,7 @@ trait Ajaxable {
 	 */
 	protected function check_ajax_referrer()
 	{
-		return check_ajax_referer('mpl-account', '_nonce', false);
+		return \check_ajax_referer('mpl-account', '_nonce', false);
 	}
 
 	/**
