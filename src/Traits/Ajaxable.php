@@ -12,19 +12,25 @@ trait Ajaxable {
 	 * The slug identifier
 	 * @var string
 	 */
-	protected $slug;
+	protected $slug = '';
 
 	/**
 	 * The ajax endpoint prefix
 	 * @var string
 	 */
-	private $prefix = '7055_';
+	protected $prefix = '7055_';
 
 	/**
 	 * Add ajax endpoints
 	 * @var array
 	 */
 	protected $ajax_endpoints = array();
+
+	/**
+	 * The nonce key
+	 * @var string
+	 */
+	protected $nonce = 'mpl_';
 
 	/**
 	 * Register ajax endpoints
@@ -64,7 +70,7 @@ trait Ajaxable {
 	 */
 	protected function check_ajax_referrer()
 	{
-		return \check_ajax_referer('mpl-account', '_nonce', false);
+		return \check_ajax_referer($this->nonce, '_nonce', false);
 	}
 
 	/**
