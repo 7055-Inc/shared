@@ -33,6 +33,12 @@ abstract class BaseAjaxHandler
      */
     protected $type = self::TYPE_BOTH;
 
+	/**
+	 * The event nocne
+	 * @var string
+	 */
+    protected $nonce;
+
     /**
      * BaseAjaxHandler constructor.
      */
@@ -64,6 +70,14 @@ abstract class BaseAjaxHandler
             add_action('wp_ajax_'.$this->slug, array($this, 'handle'));
         }
     }
+    
+	/**
+	 * Check the ajax referrer
+	 */
+	protected function check_ajax_referrer()
+	{
+		return \check_ajax_referer($this->nonce, '_nonce', false);
+	}
 
     /**
      * Respond
