@@ -15,6 +15,20 @@ abstract class BaseMailer {
 	protected $html = true;
 
 	/**
+	 * Use stylesheets?
+	 * @var bool
+	 */
+	protected $use_stylesheets = true;
+
+	/**
+	 * CSS formatting for the mail template
+	 * @var string[]
+	 */
+	protected $stylesheets = array(
+		'p' => 'font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;',
+	);
+
+	/**
 	 * Send email
 	 *
 	 * @param $to
@@ -29,6 +43,9 @@ abstract class BaseMailer {
 
 		if ( $this->html ) {
 			$message = $this->toHtml( $message );
+			if ( $this->use_stylesheets ) {
+				$message = $this->applyCSS( $message );
+			}
 			add_filter( 'wp_mail_content_type', array( $this, 'set_html_content_type' ) );
 		}
 		$result = wp_mail( $to, $subject, $message, $headers, $attachemnts );
@@ -48,6 +65,21 @@ abstract class BaseMailer {
 	 * @return mixed
 	 */
 	protected function toHtml( $message ) {
+		return $message;
+	}
+
+	/**
+	 * Basic formatting with CSS
+	 *
+	 * @param $message
+	 *
+	 * @return string
+	 */
+	protected function applyCSS( $message ) {
+		foreach ( $this->stylesheets as $tag => $style ) {
+			$message = str_replace( '<' . $tag . '>', '<' . $tag . ' style="' . $style . '">', $message );
+		}
+
 		return $message;
 	}
 
