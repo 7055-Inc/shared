@@ -27,18 +27,25 @@ abstract class BaseMailer {
 	 */
 	public function send( $to, $subject, $message, $headers = '', $attachemnts = array() ) {
 
-		if($message instanceof BaseMailerMessage) {
+		if ( $message instanceof BaseMailerMessage ) {
 			$message = $message->toString();
 		}
 
 		if ( $this->html ) {
 			$message = $this->toHtml( $message );
-			add_filter( 'wp_mail_content_type', array( $this, 'set_html_content_type' ) );
+			\add_filter( 'wp_mail_content_type', array( $this, 'set_html_content_type' ) );
 		}
-		$result = wp_mail( $to, $subject, $message, $headers, $attachemnts );
+
+		if ( ! function_exists( '\wp_mail' ) ) {
+			error_log( 'BaseMailer::send called incorrectly.' );
+
+			return false;
+		}
+
+		$result = \wp_mail( $to, $subject, $message, $headers, $attachemnts );
 
 		if ( $this->html ) {
-			remove_filter( 'wp_mail_content_type', array( $this, 'set_html_content_type' ) );
+			\remove_filter( 'wp_mail_content_type', array( $this, 'set_html_content_type' ) );
 		}
 
 		return $result;
