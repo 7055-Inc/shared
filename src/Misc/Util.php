@@ -121,10 +121,21 @@ class Util
     public static function format_author_name($author, $author_name, $author_email)
     {
         $final = '';
-        if ($author) {
+	    if ($author) {
             $user = \get_user_by('id', $author);
             if ($user) {
-                $final = \ucfirst($user->display_name);
+	            $first_name = get_user_meta( $user->ID, 'first_name', true );
+	            $last_name  = get_user_meta( $user->ID, 'last_name', true );
+	            if ( ! empty( $first_name ) && ! empty( $last_name ) ) {
+		            $name = sprintf( '%s %s', $first_name, $last_name );
+	            } else if ( ! empty( $user->display_name ) ) {
+		            $name = $user->display_name;
+	            } else if ( ! empty( $user->user_nicename ) ) {
+		            $name = $user->user_nicename;
+	            } else {
+		            $name = $user->user_login;
+	            }
+                $final = \ucfirst($name);
             } else {
                 $final = __('Unknown');
             }
