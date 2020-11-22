@@ -227,19 +227,80 @@ class Util {
 	}
 
 	/**
+	 * Format UTC datetime object
+	 *
+	 * @param \DateTime $dateTime
+	 * @param string $targetFormat
+	 *
+	 * @return string
+	 */
+	public static function format_datetime_object( $dateTime, $targetFormat = 'sysdefault' ) {
+
+		if ( ! ( $dateTime instanceof \DateTime ) ) {
+			return $dateTime;
+		}
+
+		if ( $targetFormat === 'sysdefault' ) {
+			$formatting   = Util::get_default_datetime_format();
+			$targetFormat = $formatting['php'];
+		}
+
+		$dateTime = self::convert_datetime_to_local_timezone( $dateTime );
+
+		return $dateTime->format( $targetFormat );
+	}
+
+	/**
+	 * Convert datetime object to local timezone
+	 *
+	 * @param $dateTime
+	 *
+	 * @return mixed
+	 */
+	public static function convert_datetime_to_local_timezone( $dateTime ) {
+		if ( $dateTime instanceof \DateTime ) {
+			$timezone = self::get_timezone();
+			$dateTime->setTimezone( $timezone );
+
+			return $dateTime;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Human friendly date formatting
 	 *
 	 * @param $date
 	 *
 	 * @return string
 	 */
-	public static function format_human_friendly_date( $date, $siy ) {
+	public static function format_human_friendly_date( $date ) {
 		if ( empty( $date ) ) {
 			return $date;
 		}
 		$inst = Carbon::createFromFormat( 'Y-m-d H:i:s', $date );
 
 		return $inst->diffForHumans();
+	}
+
+	/**
+	 * Returns timezone
+	 *
+	 * @return \DateTimeZone
+	 */
+	public static function get_timezone() {
+		if ( ! is_user_logged_in() ) {
+			return wp_timezone();
+		}
+		$timezone = get_user_meta( get_current_user_id(), 'timezone', true );
+		if ( ! empty( $timezone ) ) {
+			$timezone = new \DateTimeZone( $timezone );
+		} else {
+			$timezone = wp_timezone();
+		}
+
+		return $timezone;
 	}
 
 	/**

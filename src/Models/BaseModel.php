@@ -58,17 +58,7 @@ class BaseModel {
 	 * @return \DateTimeZone|null
 	 */
 	private function get_timezone() {
-		if ( ! is_user_logged_in() ) {
-			return null;
-		}
-		$timezone = get_user_meta( get_current_user_id(), 'timezone', true );
-		if ( ! empty( $timezone ) ) {
-			$timezone = new \DateTimeZone( $timezone );
-		} else {
-			$timezone = wp_timezone();
-		}
-
-		return $timezone;
+		return Util::get_timezone();
 	}
 
 	/**
