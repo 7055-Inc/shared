@@ -20,7 +20,7 @@ class BaseModel {
 	 * @return $this
 	 */
 	public static function from_array( $params ) {
-		$instance = new self;
+		$instance = new static();
 		foreach ( $params as $key => $value ) {
 			$instance->$key = $value;
 		}
