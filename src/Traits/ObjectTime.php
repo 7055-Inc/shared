@@ -60,7 +60,7 @@ trait ObjectTime {
 	 *
 	 * @return \DateTimeZone|null
 	 */
-	private function get_timezone() {
+	protected function get_timezone() {
 		return Util::get_timezone();
 	}
 }
