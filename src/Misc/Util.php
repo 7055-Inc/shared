@@ -121,59 +121,6 @@ class Util {
 	}
 
 	/**
-	 * Convert date string from one format to another format
-	 *
-	 * @param $date
-	 * @param $sourceFormat
-	 * @param $targetFormat
-	 *
-	 * @param string $sourceTimezone
-	 * @param null $targetTimezone
-	 *
-	 * @return mixed
-	 */
-	public static function convert_date( $date, $sourceFormat, $targetFormat, $sourceTimezone = 'UTC', $targetTimezone = null ) {
-		try {
-
-			$dt = self::create_datetime( $date, $sourceFormat, $sourceTimezone );
-
-			if ( false === $dt ) {
-				return null;
-			}
-
-			if ( ! is_null( $targetTimezone ) ) {
-				if ( is_string( $targetTimezone ) ) {
-					$targetTimezone = new \DateTimeZone( $targetTimezone );
-				}
-				if ( $targetTimezone instanceof \DateTimeZone ) {
-					$dt->setTimezone( $targetTimezone );
-				}
-			}
-
-			return $dt->format( $targetFormat );
-		} catch ( \Exception $e ) {
-			return null;
-		}
-	}
-
-	/**
-	 * Create datetime
-	 *
-	 * @param $date
-	 * @param $sourceFormat
-	 * @param $sourceTimezone
-	 *
-	 * @return \DateTime|false
-	 */
-	public static function create_datetime( $date, $sourceFormat = 'Y-m-d H:i:s', $sourceTimezone = 'UTC' ) {
-		if ( is_string( $sourceTimezone ) ) {
-			$sourceTimezone = new \DateTimeZone( $sourceTimezone );
-		}
-
-		return \DateTime::createFromFormat( $sourceFormat, $date, $sourceTimezone );
-	}
-
-	/**
 	 * Ensure the date is always saved in the db correctly
 	 *
 	 * @param $date
@@ -229,25 +176,87 @@ class Util {
 	/**
 	 * Format UTC datetime object
 	 *
-	 * @param \DateTime $dateTime
+	 * @param \DateTime|Carbon $dateTime
 	 * @param string $targetFormat
 	 *
 	 * @return string
 	 */
 	public static function format_datetime_object( $dateTime, $targetFormat = 'sysdefault' ) {
 
-		if ( ! ( $dateTime instanceof \DateTime ) ) {
-			return $dateTime;
-		}
-
 		if ( $targetFormat === 'sysdefault' ) {
 			$formatting   = Util::get_default_datetime_format();
 			$targetFormat = $formatting['php'];
 		}
-
 		$dateTime = self::convert_datetime_to_local_timezone( $dateTime );
 
 		return $dateTime->format( $targetFormat );
+	}
+
+	/**
+	 * Format UTC datetime object
+	 *
+	 * @param \DateTime|Carbon $dateTime
+	 *
+	 * @return string
+	 */
+	public static function format_datetime_object_for_humans( $dateTime ) {
+		$dateTime = self::convert_datetime_to_local_timezone( $dateTime );
+
+		return $dateTime->diffForHumans();
+	}
+
+
+	/**
+	 * Convert date string from one format to another format
+	 *
+	 * @param $date
+	 * @param $sourceFormat
+	 * @param $targetFormat
+	 *
+	 * @param string $sourceTimezone
+	 * @param null $targetTimezone
+	 *
+	 * @return mixed
+	 */
+	public static function convert_date( $date, $sourceFormat, $targetFormat, $sourceTimezone = 'UTC', $targetTimezone = null ) {
+		try {
+
+			$dt = self::create_datetime( $date, $sourceFormat, $sourceTimezone );
+
+			if ( false === $dt ) {
+				return null;
+			}
+
+			if ( ! is_null( $targetTimezone ) ) {
+				if ( is_string( $targetTimezone ) ) {
+					$targetTimezone = new \DateTimeZone( $targetTimezone );
+				}
+				if ( $targetTimezone instanceof \DateTimeZone ) {
+					$dt->setTimezone( $targetTimezone );
+				}
+			}
+
+			return $dt->format( $targetFormat );
+		} catch ( \Exception $e ) {
+			return null;
+		}
+	}
+
+	/**
+	 * Create datetime
+	 *
+	 * @param $date
+	 * @param $sourceFormat
+	 * @param $sourceTimezone
+	 *
+	 * @return Carbon|false
+	 */
+	public static function create_datetime( $date, $sourceFormat = 'Y-m-d H:i:s', $sourceTimezone = 'UTC' ) {
+		if ( is_string( $sourceTimezone ) ) {
+			$sourceTimezone = new \DateTimeZone( $sourceTimezone );
+		}
+
+		return Carbon::createFromFormat( $sourceFormat, $date, $sourceTimezone );
 	}
 
 	/**
@@ -258,30 +267,19 @@ class Util {
 	 * @return mixed
 	 */
 	public static function convert_datetime_to_local_timezone( $dateTime ) {
-		if ( $dateTime instanceof \DateTime ) {
-			$timezone = self::get_timezone();
-			$dateTime->setTimezone( $timezone );
 
-			return $dateTime;
+		if ( is_string( $dateTime ) ) {
+			$dateTime = \DateTime::createFromFormat( 'Y-m-d H:i:s', $dateTime );
 		}
 
-		return null;
-	}
-
-	/**
-	 * Human friendly date formatting
-	 *
-	 * @param $date
-	 *
-	 * @return string
-	 */
-	public static function format_human_friendly_date( $date ) {
-		if ( empty( $date ) ) {
-			return $date;
+		if ( ! ( $dateTime instanceof Carbon ) ) {
+			$dateTime = Carbon::instance( $dateTime );
 		}
-		$inst = Carbon::createFromFormat( 'Y-m-d H:i:s', $date );
 
-		return $inst->diffForHumans();
+		$timezone = self::get_timezone();
+		$dateTime->setTimezone( $timezone );
+
+		return $dateTime;
 	}
 
 	/**
