@@ -100,6 +100,13 @@ class BaseMailerMessage {
 	}
 
 	/**
+	 * Add footer
+	 */
+	public function addFooter() {
+		$this->addParagraph( sprintf( __( 'Greetings,<br/>%s' ), \get_bloginfo( 'blogname' ) ) );
+	}
+
+	/**
 	 * Add element to the elements array
 	 *
 	 * @param $element
