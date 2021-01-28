@@ -36,4 +36,13 @@ class BaseModel {
 		return get_object_vars( $this );
 	}
 
+    /**
+     * Returns edit url.
+     * @return string
+     */
+    public function get_edit_url() {
+        _doing_it_wrong('get_edit_url() needs implementation.');
+        return '';
+    }
+
 }
