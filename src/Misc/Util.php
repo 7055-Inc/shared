@@ -483,7 +483,9 @@ class Util {
 	 * @param $status
 	 */
 	public static function format_status( $status ) {
-		return '<span class="mpl-status mpl-status-' . $status . '">' . ucfirst( $status ) . '</span>';
+		$status_name = ucfirst( str_replace( array( '-', '_' ), array( '', '' ), $status ) );
+
+		return '<span class="mpl-status mpl-status-' . $status . '">' . $status_name . '</span>';
 	}
 
 	/**
