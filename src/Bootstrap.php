@@ -2,7 +2,7 @@
 
 namespace The7055inc\Shared;
 
-use The7055inc\Marketplace\Hooks\UpdateChecker;
+use The7055inc\Shared\Hooks\UpdateChecker;
 
 class Bootstrap {
 

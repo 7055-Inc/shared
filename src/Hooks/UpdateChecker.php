@@ -1,6 +1,6 @@
 <?php
 
-namespace The7055inc\Marketplace\Hooks;
+namespace The7055inc\Shared\Hooks;
 
 use The7055inc\Shared\Traits\RunOnce;
 
