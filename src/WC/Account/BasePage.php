@@ -292,6 +292,7 @@ abstract class BasePage {
 				$action_url   = add_query_arg( 'context', $action_slug, $base_action_url );
 				$action_name  = $action['name'];
 				$action_title = $action['title'];
+				$is_modal     = isset( $action['modal'] ) ? (bool) $action['modal'] : '';
 				$endpoint     = isset( $action['endpoint'] ) && $this->ajax_endpoints[ $action['endpoint'] ]['key'] ? $this->ajax_endpoints[ $action['endpoint'] ]['key'] : '';
 				if ( ! empty( $endpoint ) ) {
 					$action_url = add_query_arg( array(
@@ -302,7 +303,7 @@ abstract class BasePage {
 				}
 				$action_icon  = isset( $action['icon'] ) ? $action['icon'] : '';
 				$action_icon  = sprintf( '<span class="mpl-icon-%s"></span>', $action_icon );
-				$actions_html .= sprintf( '<li><a title="%s" data-id="%s" class="%s" href="%s">%s%s</a></li>', $action_title, $item_id, ( 'mpl-action-' . $action_slug ), $action_url, $action_icon, $action_name );
+				$actions_html .= sprintf( '<li><a %s title="%s" data-id="%s" class="%s" href="%s">%s%s</a></li>', ($is_modal ? 'rel="modal:open"' : ''), $action_title, $item_id, ( 'mpl-action-' . $action_slug ), $action_url, $action_icon, $action_name );
 
 			}
 			$actions_html .= '</ul>';
