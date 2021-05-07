@@ -11,6 +11,5 @@ class Bootstrap {
 	 */
 	public function __construct() {
 		require_once dirname( dirname( __FILE__ ) ) . '/lib/plugin-update-checker/plugin-update-checker.php';
-		new UpdateChecker();
 	}
 }
