@@ -21,6 +21,14 @@ class MediaLibraryPermissions {
 			'type'     => 'filter'
 		) );
 
+		$this->add( array(
+			'name'     => 'media_view_strings',
+			'callable' => 'my_account_disable_media_library_popup_menu_items',
+			'priority' => 10,
+			'args'     => 1,
+			'type'     => 'filter',
+		) );
+
 		$this->register();
 
 	}
@@ -53,5 +61,34 @@ class MediaLibraryPermissions {
 		return $query;
 
 	}
+
+	/**
+	 * Disables various menu items in media library popup in the front-end.
+	 *
+	 * @param $strings
+	 *
+	 * @return mixed
+	 */
+	public function my_account_disable_media_library_popup_menu_items( $strings ) {
+
+		if ( is_admin() ) {
+			return $strings;
+		}
+
+		$list = array(
+			'insertFromUrlTitle',
+			'createGalleryTitle',
+			'createPlaylistTitle',
+			'createVideoPlaylistTitle',
+		);
+		foreach ( $list as $key ) {
+			if ( isset( $strings[ $key ] ) ) {
+				unset( $strings[ $key ] );
+			}
+		}
+
+		return $strings;
+	}
+
 
 }

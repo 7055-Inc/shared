@@ -42,6 +42,7 @@ class UploadField
     public static function script() {
         ?>
 
+        <style>#menu-item-gallery, #menu-item-playlist, #menu-item-video-playlist {display: none;}</style>
         <script>
             (function($){
                 // The "Upload" button
@@ -53,7 +54,14 @@ class UploadField
                         $(button).prev().val(attachment.id);
                         wp.media.editor.send.attachment = send_attachment_bkp;
                     };
-                    wp.media.editor.open(button);
+                    wp.media.editor.open(button, {
+                        frame: 'post',
+                        state: 'insert',
+                        library: {
+                            type: [ 'image' ]
+                        },
+                        multiple: false
+                    });
                     return false;
                 });
                 // The "Remove" button (remove the value from input type='hidden')
