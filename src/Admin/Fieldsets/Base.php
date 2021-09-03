@@ -1,6 +1,6 @@
 <?php
 
-namespace The7055inc\Shared\Fieldsets;
+namespace The7055inc\Shared\Admin\Fieldsets;
 
 abstract class Base
 {
