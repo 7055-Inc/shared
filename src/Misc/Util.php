@@ -5,6 +5,7 @@ namespace The7055inc\Shared\Misc;
 
 
 use Carbon\Carbon;
+use The7055inc\Marketplace\Misc\VendorsHelper;
 
 class Util {
 
@@ -13,7 +14,7 @@ class Util {
 	 *
 	 * @param $root
 	 * @param $_view
-	 * @param array $_data
+	 * @param  array  $_data
 	 *
 	 * @return false|string
 	 */
@@ -47,7 +48,7 @@ class Util {
 	 *
 	 * @return string|void
 	 */
-	public static function format_author_name( $author, $author_name, $author_email ) {
+	public static function format_author_name( $author, $author_name, $author_email, $link = false ) {
 		$final = '';
 		if ( $author ) {
 			$user = \get_user_by( 'id', $author );
@@ -56,17 +57,27 @@ class Util {
 				$last_name  = get_user_meta( $user->ID, 'last_name', true );
 				if ( ! empty( $first_name ) && ! empty( $last_name ) ) {
 					$name = sprintf( '%s %s', $first_name, $last_name );
-				} else if ( ! empty( $user->display_name ) ) {
+				} elseif ( ! empty( $user->display_name ) ) {
 					$name = $user->display_name;
-				} else if ( ! empty( $user->user_nicename ) ) {
+				} elseif ( ! empty( $user->user_nicename ) ) {
 					$name = $user->user_nicename;
 				} else {
 					$name = $user->user_login;
 				}
 				$final = \ucfirst( $name );
+				$url = null;
+				if ( 'vendor' === $link ) {
+					$url = VendorsHelper::get_admin_edit_url( $user->ID );
+				} elseif ( 'user' === $link ) {
+					$url = admin_url( 'user-edit.php?user_id=' . $user->ID );
+				}
+				if ( $url ) {
+					$final = sprintf( '<a href="%s">%s</a>', $url, $final );
+				}
 			} else {
 				$final = __( 'Unknown' );
 			}
+
 		} else {
 			if ( ! empty( $author_name ) ) {
 				$final .= $author_name;
@@ -91,8 +102,8 @@ class Util {
 	 *
 	 * @return string|void
 	 */
-	public static function format_author( $ID ) {
-		return self::format_author_name( $ID, null, null );
+	public static function format_author( $ID, $link = false ) {
+		return self::format_author_name( $ID, null, null, $link );
 	}
 
 
@@ -157,8 +168,8 @@ class Util {
 	 *
 	 * @param $date
 	 *
-	 * @param string $source_timezone
-	 * @param null $target_timezone
+	 * @param  string  $source_timezone
+	 * @param  null  $target_timezone
 	 *
 	 * @return string
 	 */
@@ -176,8 +187,8 @@ class Util {
 	/**
 	 * Format UTC datetime object
 	 *
-	 * @param \DateTime|Carbon $dateTime
-	 * @param string $targetFormat
+	 * @param  \DateTime|Carbon  $dateTime
+	 * @param  string  $targetFormat
 	 *
 	 * @return string
 	 */
@@ -195,7 +206,7 @@ class Util {
 	/**
 	 * Format UTC datetime object
 	 *
-	 * @param \DateTime|Carbon $dateTime
+	 * @param  \DateTime|Carbon  $dateTime
 	 *
 	 * @return string
 	 */
@@ -213,8 +224,8 @@ class Util {
 	 * @param $sourceFormat
 	 * @param $targetFormat
 	 *
-	 * @param string $sourceTimezone
-	 * @param null $targetTimezone
+	 * @param  string  $sourceTimezone
+	 * @param  null  $targetTimezone
 	 *
 	 * @return mixed
 	 */
@@ -330,7 +341,7 @@ class Util {
 	 * Link post
 	 *
 	 * @param $id
-	 * @param bool $ext
+	 * @param  bool  $ext
 	 *
 	 * @return string|void
 	 */
@@ -372,8 +383,7 @@ class Util {
         <div class="upload">
             <img data-src="<?php echo $placeholder; ?>" src="<?php echo $current_src; ?>" width="120px"/>
             <div>
-                <input type="hidden" name="<?php echo $key; ?>" id="<?php echo $key; ?>"
-                       value="<?php echo $media_id; ?>"/>
+                <input type="hidden" name="<?php echo $key; ?>" id="<?php echo $key; ?>" value="<?php echo $media_id; ?>"/>
                 <button type="submit" class="upload_image_button button"><?php _e( 'Upload' ); ?></button>
                 <button type="submit" class="remove_image_button button">&times;</button>
             </div>
@@ -421,7 +431,7 @@ class Util {
 	/**
 	 *
 	 * @param $id
-	 * @param bool $ext
+	 * @param  bool  $ext
 	 *
 	 * @return string|void
 	 */
@@ -536,7 +546,7 @@ class Util {
 	/**
 	 * Return the roles of user
 	 *
-	 * @param int|\WP_User $user
+	 * @param  int|\WP_User  $user
 	 *
 	 * @return array|string[]
 	 */
