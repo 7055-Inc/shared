@@ -16,7 +16,8 @@
     "nesbot/carbon": "^2.38",
     "jasongrimes/paginator": "^1.0",
     "deliciousbrains/wp-background-processing": "^1.0",
-    "ignitekit/wp-option-builder": "^1.0"
+    "ignitekit/wp-option-builder": "^1.0",
+    "woocommerce/action-scheduler": "^3.1"
   },
   "autoload": {
     "psr-4": {
