@@ -26,6 +26,8 @@ class BaseMailerMessage {
 		'h4' => 'margin-top:0;margin-bottom:15px;',
 		'h5' => 'margin-top:0;margin-bottom:15px;',
 		'p'  => 'font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px; line-height: 1.3;',
+		'ul'  => 'font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 10px; line-height: 1.3;',
+		'li'  => 'font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px; line-height: 1.3;',
 	);
 
 
