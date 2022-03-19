@@ -619,4 +619,27 @@ class Util {
 
 		return \get_user_by( 'id', $id );
 	}
+
+	/**
+	 * Get post parents
+	 *
+	 * @param $id
+	 * @param  null  $find_parent_callback
+	 *
+	 * @return array
+	 */
+	public static function get_post_parents( $id, $find_parent_callback = null ) {
+		$parents = [];
+		$post_id = $id;
+		while ( true ) {
+			$parent_id = is_callable( $find_parent_callback ) ? $find_parent_callback( $post_id ) : get_post_field( 'post_parent', $post_id );
+			if ( ! $parent_id || empty( $parent_id ) ) {
+				break;
+			}
+			array_push( $parents, $parent_id );
+			$post_id = $parent_id;
+		}
+
+		return $parents;
+	}
 }
