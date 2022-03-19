@@ -539,6 +539,15 @@ class Util {
 			\update_post_meta( $new_id, $key, $value );
 		}
 
+		// Copy taxonomies
+		$taxonomies = get_object_taxonomies( $source );
+		foreach ( $taxonomies as $taxonomy ) {
+			$terms    = wp_get_object_terms( $source->ID, $taxonomy );
+			$term_ids = wp_list_pluck( $terms, 'term_id' );
+			$term_ids = array_map( 'intval', $term_ids );
+			wp_set_object_terms( $new_id, $term_ids, $taxonomy );
+		}
+
 		update_post_meta( $new_id, '_source', $id );
 
 		return $new_id;
