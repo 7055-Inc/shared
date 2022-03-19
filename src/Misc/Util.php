@@ -65,7 +65,7 @@ class Util {
 					$name = $user->user_login;
 				}
 				$final = \ucfirst( $name );
-				$url = null;
+				$url   = null;
 				if ( 'vendor' === $link ) {
 					$url = VendorsHelper::get_admin_edit_url( $user->ID );
 				} elseif ( 'user' === $link ) {
@@ -538,6 +538,8 @@ class Util {
 			$value = is_array( $v_arr ) ? $v_arr[0] : $v_arr;
 			\update_post_meta( $new_id, $key, $value );
 		}
+
+		update_post_meta( $new_id, '_source', $id );
 
 		return $new_id;
 	}
