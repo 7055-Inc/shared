@@ -276,7 +276,7 @@ abstract class BasePage {
 	 * Render actions
 	 *
 	 * @param $item_id
-	 * @param array $actions
+	 * @param  array  $actions
 	 *
 	 * @return string
 	 */
@@ -289,22 +289,25 @@ abstract class BasePage {
 			$actions_html    = '<ul class="mpl-table-actions">';
 			$base_action_url = add_query_arg( 'id', $item_id, $this->url );
 			foreach ( $actions as $action_slug => $action ) {
-				$action_url   = add_query_arg( 'context', $action_slug, $base_action_url );
-				$action_name  = $action['name'];
-				$action_title = $action['title'];
-				$is_modal     = isset( $action['modal'] ) ? (bool) $action['modal'] : '';
-				$endpoint     = isset( $action['endpoint'] ) && $this->ajax_endpoints[ $action['endpoint'] ]['key'] ? $this->ajax_endpoints[ $action['endpoint'] ]['key'] : '';
-				if ( ! empty( $endpoint ) ) {
+				$endpoint = isset( $action['endpoint'] ) && $this->ajax_endpoints[ $action['endpoint'] ]['key'] ? $this->ajax_endpoints[ $action['endpoint'] ]['key'] : '';
+				if ( ! empty( $action['url'] ) ) {
+					$action_url = $action['url'];
+				} elseif ( ! empty( $endpoint ) ) {
 					$action_url = add_query_arg( array(
 						'id'       => isset( $item_id ) ? $item_id : null,
 						'action'   => $endpoint,
 						'_wpnonce' => wp_create_nonce( $this->nonce ),
 					), admin_url( 'admin-ajax.php' ) );
+				} else {
+					$action_url = add_query_arg( 'context', $action_slug, $base_action_url );
 				}
+
+				$action_name  = $action['name'];
+				$action_title = $action['title'];
+				$is_modal     = isset( $action['modal'] ) ? (bool) $action['modal'] : '';
 				$action_icon  = isset( $action['icon'] ) ? $action['icon'] : '';
 				$action_icon  = sprintf( '<span class="mpl-icon-%s"></span>', $action_icon );
-				$actions_html .= sprintf( '<li><a %s title="%s" data-id="%s" class="%s" href="%s">%s%s</a></li>', ($is_modal ? 'rel="modal:open"' : ''), $action_title, $item_id, ( 'mpl-action-' . $action_slug ), $action_url, $action_icon, $action_name );
-
+				$actions_html .= sprintf( '<li><a %s title="%s" data-id="%s" class="%s" href="%s">%s%s</a></li>', ( $is_modal ? 'rel="modal:open"' : '' ), $action_title, $item_id, ( 'mpl-action-' . $action_slug ), $action_url, $action_icon, $action_name );
 			}
 			$actions_html .= '</ul>';
 		}
