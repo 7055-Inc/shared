@@ -11,7 +11,7 @@
   "require": {
     "ignitekit/wp-validation": "*",
     "ignitekit/wp-migrations": "*",
-    "ignitekit/wp-orm": "^1.1",
+    "ignitekit/wp-orm": "dev-future",
     "htmlburger/carbon-fields": "v3.2.1",
     "nesbot/carbon": "^2.38",
     "jasongrimes/paginator": "^1.0",
