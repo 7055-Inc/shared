@@ -38,12 +38,17 @@ trait Ajaxable {
 	protected function register_ajax_endpoints() {
 		if (count($this->ajax_endpoints)) {
 			foreach ($this->ajax_endpoints as $ajax_endpoint) {
-				if ( ! method_exists($this, $ajax_endpoint['callback'])) {
-					continue;
+
+				$callback = [];
+				if(method_exists($this, $ajax_endpoint['callback'])) {
+					$callback = [$this, $ajax_endpoint['callback']];
+				} else if(is_callable($ajax_endpoint['callback'])) {
+					$callback = $ajax_endpoint['callback'];
 				}
-				add_action('wp_ajax_'.$ajax_endpoint['key'], array($this, $ajax_endpoint['callback']));
+
+				add_action('wp_ajax_'.$ajax_endpoint['key'], $callback);
 				if ( ! $ajax_endpoint['is_private']) {
-					add_action('wp_ajax_nopriv_'.$ajax_endpoint['key'], array($this, $ajax_endpoint['callback']));
+					add_action('wp_ajax_nopriv_'.$ajax_endpoint['key'], $callback);
 				}
 			}
 		}
