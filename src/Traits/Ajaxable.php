@@ -40,7 +40,7 @@ trait Ajaxable {
 			foreach ($this->ajax_endpoints as $ajax_endpoint) {
 
 				$callback = [];
-				if(method_exists($this, $ajax_endpoint['callback'])) {
+				if(is_string($ajax_endpoint['callback']) && method_exists($this, $ajax_endpoint['callback'])) {
 					$callback = [$this, $ajax_endpoint['callback']];
 				} else if(is_callable($ajax_endpoint['callback'])) {
 					$callback = $ajax_endpoint['callback'];
