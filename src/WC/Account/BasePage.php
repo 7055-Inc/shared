@@ -307,7 +307,7 @@ abstract class BasePage {
 				$is_modal     = isset( $action['modal'] ) ? (bool) $action['modal'] : '';
 				$action_icon  = isset( $action['icon'] ) ? $action['icon'] : '';
 				$action_icon  = sprintf( '<span class="mpl-icon-%s"></span>', $action_icon );
-				$actions_html .= sprintf( '<li><a %s title="%s" data-id="%s" class="%s" href="%s">%s%s</a></li>', ( $is_modal ? 'rel="modal:open"' : '' ), $action_title, $item_id, ( 'mpl-action-' . $action_slug ), $action_url, $action_icon, $action_name );
+				$actions_html .= sprintf( '<li><a %s title="%s" data-id="%s" class="%s" href="%s">%s%s</a></li>', ( $is_modal ? 'rel="modal:open"' : '' ), $action_title, $item_id, ( 'mpl-action-' . $action_slug . ' mpl-action-'.$action_slug.'-'.$this->slug ), $action_url, $action_icon, $action_name );
 			}
 			$actions_html .= '</ul>';
 		}
