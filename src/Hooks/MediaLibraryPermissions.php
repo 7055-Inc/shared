@@ -29,8 +29,32 @@ class MediaLibraryPermissions {
 			'type'     => 'filter',
 		) );
 
+		$this->add( array(
+			'name' => 'woocommerce_prevent_admin_access',
+			'callable' => 'allow_async_upload_access',
+			'priority' => '10',
+			'args' => 1,
+			'type' => 'filter',
+		));
+
 		$this->register();
 
+	}
+
+	/**
+	 * Allow async uploads from the front-end for WooCommerce 7.8+
+	 *
+	 * @param $prevent_access
+	 *
+	 * @return false|mixed
+	 */
+	public function allow_async_upload_access( $prevent_access ) {
+		$script = isset( $_SERVER['SCRIPT_FILENAME'] ) ? basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) ) : '';
+		if ( 'async-upload.php' === $script ) {
+			$prevent_access = false;
+		}
+
+		return $prevent_access;
 	}
 
 	/**
